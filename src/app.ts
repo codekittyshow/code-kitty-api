@@ -27,10 +27,11 @@ class App {
     }
 
     private async connectToDB(): Promise<void> {
-        const MONGO_DB_URI = "mongodb+srv://chamod:12345@codekitty.sacfe.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+        const MONGO_DB_URI = "mongodb+srv://chamod:12345@codekitty.sacfe.mongodb.net/CodeKitty?retryWrites=true&w=majority"
 
         try {
             await MongoHelper.connect(MONGO_DB_URI);
+            console.info(`Connected to MongoDB!`);
         } catch (error) {
             console.error(error);
         }

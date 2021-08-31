@@ -1,4 +1,9 @@
+import dotEnv from "dotenv";
+dotEnv.config({ path: __dirname+'/.env' });
+
 import app from "./app"
+
+
 
 const PORT: number = 4000;
 

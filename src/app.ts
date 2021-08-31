@@ -1,9 +1,9 @@
-import * as express from "express";
-import * as cors from "cors";
-import * as morgan from "morgan"
-import * as bodyParser from "body-parser";
+import express from "express";
+import cors from "cors";
+import morgan from "morgan"
+import bodyParser from "body-parser";
 import apiV1 from "./api"
-import {MongoHelper} from "./config/mongodb.config"
+import { MongoHelper } from "./config/mongodb.config"
 
 class App {
     public express: express.Application;
@@ -27,10 +27,8 @@ class App {
     }
 
     private async connectToDB(): Promise<void> {
-        const MONGO_DB_URI = "mongodb+srv://chamod:12345@codekitty.sacfe.mongodb.net/CodeKitty?retryWrites=true&w=majority"
-
         try {
-            await MongoHelper.connect(MONGO_DB_URI);
+            await MongoHelper.connect();
             console.info(`Connected to MongoDB!`);
         } catch (error) {
             console.error(error);

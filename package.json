@@ -1,5 +1,5 @@
 {
-  "name": "@platformercloud/code-kittty-api",
+  "name": "@codekitty/code-kittty-api",
   "version": "1.0.0",
   "description": "Code Kitty API",
   "main": "index.js",
@@ -7,19 +7,24 @@
     "doc": "docs"
   },
   "scripts": {
-    "start":"ts-node src/index.ts",
+    "start": "ts-node src/index.ts",
     "dev": "nodemon --exec ts-node src/index.ts",
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Chamod, Safnaj, Shreya",
   "license": "ISC",
   "dependencies": {
+    "@types/mongodb": "^4.0.7",
+    "@types/mongoose": "^5.11.97",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "http-status": "^1.5.0",
     "mongodb": "^4.1.0",
     "mongoose": "^5.13.7",
     "morgan": "^1.10.0",
+    "prettier": "^2.4.0",
     "typescript": "^4.3.5"
   },
   "devDependencies": {

@@ -6,6 +6,7 @@ export class MongoHelper {
   public static async connect(url: string): Promise<void> {
     try {
       this.client = await mongo.MongoClient.connect(url, {
+
       });
     } catch (e) {
       throw e;

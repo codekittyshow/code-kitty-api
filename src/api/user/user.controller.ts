@@ -20,7 +20,7 @@ export default class UserController {
     const collection = getCollection();
     const user = new User(requestData);
     try {
-      const result = await collection.insertOne(user);
+      await collection.insertOne(user);
 
       res
         .status(httpStatus.CREATED)

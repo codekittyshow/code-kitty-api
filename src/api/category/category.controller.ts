@@ -15,6 +15,7 @@ const getCollection = () => {
 };
 
 export default class CategoryController {
+
     /**
      * Get all categories
      * URL [GET] /

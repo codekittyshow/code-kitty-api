@@ -11,4 +11,5 @@ export default {
   DB_NAME: "CodeKitty",
   USER_COLLECTION_NAME: "user",
   CATEGORY_COLLECTION_NAME: "category",
+  POST_COLLECTION_NAME: "post"
 };

@@ -7,6 +7,7 @@ import ErrorCodes from "../../config/error.codes";
 import SuccessCodes from "../../config/success.codes";
 import * as httpStatus from "http-status";
 import * as responses from "../../helpers/responses.handler";
+import { ObjectId } from "mongodb";
 
 const getCollection = () => {
     return MongoHelper.client
@@ -17,6 +18,7 @@ const getCollection = () => {
 export default class PostController {
     public addPost = async (req: Request, res: Response): Promise<any> => {
         const requestData = req.body;
+        console.log(requestData);
         const collection = getCollection();
         const post = new Post(requestData);
         try {
@@ -36,12 +38,13 @@ export default class PostController {
 
     public getPost = async (req: Request, res: Response): Promise<any> => {
         const collection = getCollection();
-
+        const id = req.params.id;
+        console.log(id);
         try {
-            console.log(req.params.id);
             const post = await collection.findOne({
-                _id: req.params.id,
+                _id: new ObjectId(id),
             });
+            console.log(post);
 
             res.send(
                 responses.successWithPayload(
@@ -78,15 +81,15 @@ export default class PostController {
     };
 
     public updatePost = async (req: Request, res: Response): Promise<any> => {
-        const { userId, description, imageURL, createdDate, categoryName } =
+        const { _id, userId, description, imageURL, createdDate, categoryName } =
             req.body;
 
         const collection: any = getCollection();
 
         try {
             await collection.findOneAndUpdate(
-                { userId: new mongodb.ObjectId(userId) },
-                { $set: { description, imageURL, createdDate, categoryName } }
+                { _id: new mongodb.ObjectId(_id) },
+                { $set: { userId, description, imageURL, createdDate, categoryName } }
             );
 
             res.send(responses.success(SuccessCodes.SUCCESSFULLY_DATA_UPDATED));

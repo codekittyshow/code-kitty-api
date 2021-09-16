@@ -5,9 +5,9 @@ const post: Router = Router();
 const controller = new Controller();
 
 post.post("/", controller.addPost);
-post.get("/:userId", controller.getPost);
+post.get("/:id", controller.getPost);
 post.get("/", controller.getAllPost);
 post.put("/", controller.updatePost);
-post.delete("/:userId", controller.deletePost);
+post.delete("/:id", controller.deletePost);
 
 export default post;

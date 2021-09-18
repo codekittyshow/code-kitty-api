@@ -18,7 +18,6 @@ const getCollection = () => {
 export default class PostController {
     public addPost = async (req: Request, res: Response): Promise<any> => {
         const requestData = req.body;
-        console.log(requestData);
         const collection = getCollection();
         const post = new Post(requestData);
         try {
@@ -39,12 +38,10 @@ export default class PostController {
     public getPost = async (req: Request, res: Response): Promise<any> => {
         const collection = getCollection();
         const id = req.params.id;
-        console.log(id);
         try {
             const post = await collection.findOne({
                 _id: new ObjectId(id),
             });
-            console.log(post);
 
             res.send(
                 responses.successWithPayload(

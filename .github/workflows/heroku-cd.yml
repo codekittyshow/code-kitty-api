@@ -1,0 +1,29 @@
+name: Heroku Docker Registry Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Build, Push and Release a Docker container to Heroku.
+        uses: gonuit/heroku-docker-deploy@v1.3.3
+        with:
+          email: hcsperera@gmail.com
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: code-kitty-api
+          dockerfile_directory: .
+          dockerfile_name: Dockerfile
+          docker_options: "--no-cache"
+          process_type: web

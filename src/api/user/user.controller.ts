@@ -18,9 +18,19 @@ export default class UserController {
   public addUser = async (req: Request, res: Response): Promise<any> => {
     const requestData = req.body;
     const collection = getCollection();
-    const user = new User(requestData);
+    const userData = new User(requestData);
     try {
-      await collection.insertOne(user);
+      const { uid } = requestData;
+      const user = await collection.findOne({ uid });
+
+      if (user) {
+        res
+          .status(httpStatus.OK)
+          .send(responses.success(ErrorCodes.USER_ALREADY_EXISTS));
+        res.end();
+        return;
+      }
+      await collection.insertOne(userData);
 
       res
         .status(httpStatus.CREATED)
@@ -38,9 +48,8 @@ export default class UserController {
     const collection = getCollection();
 
     try {
-      console.log(req.params.id);
       const user = await collection.findOne({
-        _id: req.params.id,
+        uid: req.params.id,
       });
 
       res.send(
@@ -78,13 +87,13 @@ export default class UserController {
   };
 
   public updateUser = async (req: Request, res: Response): Promise<any> => {
-    const { _id, displayName, email, photoURL } = req.body;
+    const { uid, displayName, email, photoURL } = req.body;
 
     const collection: any = getCollection();
 
     try {
       await collection.findOneAndUpdate(
-        { _id: new mongodb.ObjectId(_id) },
+        { uid: new mongodb.ObjectId(uid) },
         { $set: { displayName, email, photoURL } }
       );
 
@@ -102,7 +111,7 @@ export default class UserController {
     const collection: any = getCollection();
 
     try {
-      await collection.deleteOne({ _id: new mongodb.ObjectId(id) });
+      await collection.deleteOne({ uid: new mongodb.ObjectId(id) });
       res.send(responses.success(SuccessCodes.SUCCESSFULLY_DATA_DELETED));
     } catch (e) {
       console.error(e.message);

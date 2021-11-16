@@ -10,106 +10,145 @@ import * as responses from "../../helpers/responses.handler";
 import { ObjectId } from "mongodb";
 
 const getCollection = () => {
-    return MongoHelper.client
-        .db(Config.DB_NAME)
-        .collection(Config.POST_COLLECTION_NAME);
+  return MongoHelper.client
+    .db(Config.DB_NAME)
+    .collection(Config.POST_COLLECTION_NAME);
 };
 
 export default class PostController {
-    public addPost = async (req: Request, res: Response): Promise<any> => {
-        const requestData = req.body;
-        const collection = getCollection();
-        const post = new Post(requestData);
-        try {
-            await collection.insertOne(post);
+  public addPost = async (req: Request, res: Response): Promise<any> => {
+    const requestData = req.body;
+    const collection = getCollection();
 
-            res
-                .status(httpStatus.CREATED)
-                .send(responses.success(SuccessCodes.SUCCESSFULLY_DATA_ADDED));
-            res.end();
-        } catch (e) {
-            console.error(e.message);
-            res.send(
-                responses.failed(ErrorCodes.INTERNAL_ERROR, httpStatus.BAD_REQUEST)
-            );
-        }
-    };
+    requestData.createdDate = new Date().toString();
+    const post = new Post(requestData);
+    try {
+      await collection.insertOne(post);
 
-    public getPost = async (req: Request, res: Response): Promise<any> => {
-        const collection = getCollection();
-        const id = req.params.id;
-        try {
-            const post = await collection.findOne({
-                _id: new ObjectId(id),
-            });
+      res
+        .status(httpStatus.CREATED)
+        .send(responses.success(SuccessCodes.SUCCESSFULLY_DATA_ADDED));
+      res.end();
+    } catch (e) {
+      console.error(e.message);
+      res.send(
+        responses.failed(ErrorCodes.INTERNAL_ERROR, httpStatus.BAD_REQUEST)
+      );
+    }
+  };
 
-            res.send(
-                responses.successWithPayload(
-                    SuccessCodes.SUCCESSFULLY_DATA_RETRIVED,
-                    post
-                )
-            );
-        } catch (e) {
-            console.error(e.message);
-            res.send(
-                responses.failed(ErrorCodes.INTERNAL_ERROR, httpStatus.BAD_REQUEST)
-            );
-        }
-    };
+  public getPost = async (req: Request, res: Response): Promise<any> => {
+    const collection = getCollection();
+    const id = req.params.id;
+    try {
+      const post = await collection.findOne({
+        _id: new ObjectId(id),
+      });
 
-    public getAllPost = async (req: Request, res: Response): Promise<any> => {
-        const collection: any = getCollection();
+      res.send(
+        responses.successWithPayload(
+          SuccessCodes.SUCCESSFULLY_DATA_RETRIVED,
+          post
+        )
+      );
+    } catch (e) {
+      console.error(e.message);
+      res.send(
+        responses.failed(ErrorCodes.INTERNAL_ERROR, httpStatus.BAD_REQUEST)
+      );
+    }
+  };
 
-        try {
-            const data = await collection.find().toArray();
+  public getAllPost = async (req: Request, res: Response): Promise<any> => {
+    const collection: any = getCollection();
 
-            res.send(
-                responses.successWithPayload(
-                    SuccessCodes.SUCCESSFULLY_DATA_RETRIVED,
-                    data
-                )
-            );
-        } catch (e) {
-            console.error(e.message);
-            res.send(
-                responses.failed(ErrorCodes.INTERNAL_ERROR, httpStatus.BAD_REQUEST)
-            );
-        }
-    };
+    try {
+      const data = await collection.find().toArray();
 
-    public updatePost = async (req: Request, res: Response): Promise<any> => {
-        const { _id, userId, description, imageURL, createdDate, categoryName } =
-            req.body;
+      res.send(
+        responses.successWithPayload(
+          SuccessCodes.SUCCESSFULLY_DATA_RETRIVED,
+          data
+        )
+      );
+    } catch (e) {
+      console.error(e.message);
+      res.send(
+        responses.failed(ErrorCodes.INTERNAL_ERROR, httpStatus.BAD_REQUEST)
+      );
+    }
+  };
 
-        const collection: any = getCollection();
+  public updatePost = async (req: Request, res: Response): Promise<any> => {
+    const { _id, userId, description, imageURL, createdDate, categoryName } =
+      req.body;
 
-        try {
-            await collection.findOneAndUpdate(
-                { _id: new mongodb.ObjectId(_id) },
-                { $set: { userId, description, imageURL, createdDate, categoryName } }
-            );
+    const collection: any = getCollection();
 
-            res.send(responses.success(SuccessCodes.SUCCESSFULLY_DATA_UPDATED));
-        } catch (e) {
-            console.error(e.message);
-            res.send(
-                responses.failed(ErrorCodes.INTERNAL_ERROR, httpStatus.BAD_REQUEST)
-            );
-        }
-    };
+    try {
+      await collection.findOneAndUpdate(
+        { _id: new mongodb.ObjectId(_id) },
+        { $set: { userId, description, imageURL, createdDate, categoryName } }
+      );
 
-    public deletePost = async (req: Request, res: Response): Promise<any> => {
-        const id = req.params.id;
-        const collection: any = getCollection();
+      res.send(responses.success(SuccessCodes.SUCCESSFULLY_DATA_UPDATED));
+    } catch (e) {
+      console.error(e.message);
+      res.send(
+        responses.failed(ErrorCodes.INTERNAL_ERROR, httpStatus.BAD_REQUEST)
+      );
+    }
+  };
 
-        try {
-            await collection.deleteOne({ _id: new mongodb.ObjectId(id) });
-            res.send(responses.success(SuccessCodes.SUCCESSFULLY_DATA_DELETED));
-        } catch (e) {
-            console.error(e.message);
-            res.send(
-                responses.failed(ErrorCodes.INTERNAL_ERROR, httpStatus.BAD_REQUEST)
-            );
-        }
-    };
+  public deletePost = async (req: Request, res: Response): Promise<any> => {
+    const id = req.params.id;
+    const collection: any = getCollection();
+
+    try {
+      await collection.deleteOne({ _id: new mongodb.ObjectId(id) });
+      res.send(responses.success(SuccessCodes.SUCCESSFULLY_DATA_DELETED));
+    } catch (e) {
+      console.error(e.message);
+      res.send(
+        responses.failed(ErrorCodes.INTERNAL_ERROR, httpStatus.BAD_REQUEST)
+      );
+    }
+  };
+
+  public getAllPostsWithUsers = async (
+    req: Request,
+    res: Response
+  ): Promise<any> => {
+    try {
+      const collection = getCollection();
+
+      const data = await collection
+        .aggregate([
+          {
+            $lookup: {
+              from: "user",
+              localField: "userId",
+              foreignField: "uid",
+              as: "user",
+            },
+          },
+          {
+            $unwind: "$user",
+          },
+        ])
+        .toArray();
+
+      res.send(
+        responses.successWithPayload(
+          SuccessCodes.SUCCESSFULLY_DATA_RETRIVED,
+          data
+        )
+      );
+    } catch (e) {
+      console.error(e.message);
+      res.send(
+        responses.failed(ErrorCodes.INTERNAL_ERROR, httpStatus.BAD_REQUEST)
+      );
+    }
+  };
 }

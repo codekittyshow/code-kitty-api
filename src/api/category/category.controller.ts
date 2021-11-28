@@ -31,7 +31,11 @@ export default class CategoryController {
             const result = await collection.find().toArray();
             res
                 .status(httpStatus.CREATED)
-                .send(result)
+                .send({
+                    success: true,
+                    data: result,
+                    message: SuccessCodes.SUCCESSFULLY_DATA_RETRIVED
+                })
                 .end();
         } catch (e) {
             res.send(

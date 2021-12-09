@@ -10,5 +10,6 @@ post.get("/", controller.getAllPost);
 post.put("/", controller.updatePost);
 post.delete("/:id", controller.deletePost);
 post.get("/users/all", controller.getAllPostsWithUsers);
+post.get("/user/:id", controller.getPostsByUser);
 
 export default post;

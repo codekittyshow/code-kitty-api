@@ -79,6 +79,26 @@ export default class PostController {
     }
   };
 
+  public getPostsByUser = async (req: Request, res: Response): Promise<any> => {
+    const collection: any = getCollection();
+
+    try {
+      const data = await collection.find({ userId: req.params.id }).toArray();
+
+      res.send(
+        responses.successWithPayload(
+          SuccessCodes.SUCCESSFULLY_DATA_RETRIVED,
+          data
+        )
+      );
+    } catch (e) {
+      console.error(e.message);
+      res.send(
+        responses.failed(ErrorCodes.INTERNAL_ERROR, httpStatus.BAD_REQUEST)
+      );
+    }
+  };
+
   public updatePost = async (req: Request, res: Response): Promise<any> => {
     const { _id, userId, description, imageURL, createdDate, categoryName } =
       req.body;

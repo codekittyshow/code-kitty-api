@@ -9,7 +9,7 @@ jobs:
     runs-on:
       - ubuntu-latest
     env:
-      SERVICE_NAME: ghcr.io/code-kitty-api/acme-api
+      SERVICE_NAME: ghcr.io/codekittyshow/code-kitty-api
       CONTAINER_REGISTRY: ghcr.io
     steps:
       - uses: actions/checkout@v2
